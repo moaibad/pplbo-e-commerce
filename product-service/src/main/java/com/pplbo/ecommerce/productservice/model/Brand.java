@@ -1,14 +1,10 @@
-// import org.hibernate.mapping.List;
+package com.pplbo.ecommerce.productservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Table(name = "brand")
@@ -19,9 +15,9 @@ import java.util.List;
 public class Brand {
 
     @Id
-    private char brandID;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
 
-    private String brandName;
+    private String name;
 
-    private List<Product> products; // This is a list of products that are associated with this brand
 }
