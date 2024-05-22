@@ -1,75 +1,76 @@
 package com.pplbo.ecommerce.paymentservice.service;
 
-import com.pplbo.ecommerce.paymentservice.dto.PaymentRequest;
-import com.pplbo.ecommerce.paymentservice.dto.PaymentResponse;
 import com.pplbo.ecommerce.paymentservice.model.Payment;
 import com.pplbo.ecommerce.paymentservice.repository.PaymentRepository;
-import com.pplbo.ecommerce.paymentservice.kafka.PaymentResponseProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Service
 public class PaymentService {
 
-    private final PaymentRepository paymentRepository;
-    private final PaymentGatewayService paymentGatewayService;
-    private final PaymentResponseProducer paymentResponseProducer;
-
     @Autowired
-    public PaymentService(PaymentRepository paymentRepository, PaymentGatewayService paymentGatewayService,
-            PaymentResponseProducer paymentResponseProducer) {
-        this.paymentRepository = paymentRepository;
-        this.paymentGatewayService = paymentGatewayService;
-        this.paymentResponseProducer = paymentResponseProducer;
+    private PaymentRepository paymentRepository;
+
+    public List<Payment> getAllPayments() {
+        return paymentRepository.findAll();
     }
 
-    public PaymentResponse processPayment(PaymentRequest request) {
-        // Validate and process payment with the payment gateway
-        boolean isAuthorized = paymentGatewayService.authorize(request);
-
-        // Create payment entity and save to database
-        Payment payment = new Payment();
-        payment.setId(UUID.randomUUID().toString());
-        payment.setOrderId(request.getOrderId());
-        payment.setAmount(request.getAmount());
-        payment.setCurrency(request.getCurrency());
-        payment.setPaymentMethodType(request.getPaymentMethod().getType());
-        payment.setPaymentMethodDetails(request.getPaymentMethod().getDetails().toString());
-        payment.setCreatedAt(LocalDateTime.now());
-
-        paymentRepository.save(payment);
-
-        // Prepare and send payment response
-        PaymentResponse response = new PaymentResponse();
-        response.setPaymentId(payment.getId());
-        response.setOrderId(payment.getOrderId());
-        response.setStatus(isAuthorized ? "AUTHORIZED" : "DECLINED");
-        response.setAmount(payment.getAmount());
-        response.setCurrency(payment.getCurrency());
-        response.setPaymentMethod(payment.getPaymentMethodType(), payment.getPaymentMethodDetails());
-
-        paymentResponseProducer.sendPaymentResponse(response);
-
-        return response;
+    public Payment getPaymentById(Long id) {
+        return paymentRepository.findById(id).orElse(null);
     }
 
-    public PaymentResponse getPaymentStatus(String id) {
-        // Fetch payment details from the repository
-        Payment payment = paymentRepository.findById(id).orElse(null);
-        if (payment != null) {
-            PaymentResponse response = new PaymentResponse();
-            response.setPaymentId(payment.getId());
-            response.setOrderId(payment.getOrderId());
-            response.setStatus(payment.getStatus());
-            response.setAmount(payment.getAmount());
-            response.setCurrency(payment.getCurrency());
-            response.setPaymentMethod(payment.getPaymentMethodType(), payment.getPaymentMethodDetails());
-            return response;
-        } else {
-            return null; // or throw NotFoundException
+    // public Payment createPayment(Payment payment) {
+    // return paymentRepository.save(payment);
+    // }
+
+    public void deletePayment(Long id) {
+        paymentRepository.deleteById(id);
+    }
+
+    // Method to create a new payment
+    public Payment createPayment(Payment payment) {
+        Payment createdPayment = paymentRepository.save(payment);
+
+        // Validate and update payment status after creating the payment
+        validateAndUpdatePaymentStatus(createdPayment.getPaymentId());
+
+        return createdPayment;
+    }
+
+    // Method to update an existing payment
+    public Payment updatePayment(Payment payment) {
+        Payment updatedPayment = paymentRepository.save(payment);
+
+        // Validate and update payment status after updating the payment
+        validateAndUpdatePaymentStatus(updatedPayment.getPaymentId());
+
+        return updatedPayment;
+    }
+
+    public Payment validateAndUpdatePaymentStatus(Long paymentId) {
+        // Retrieve the payment from the repository
+        Payment payment = paymentRepository.findById(paymentId).orElse(null);
+
+        // Check if the payment exists
+        if (payment == null) {
+            // Handle case where payment does not exist
+            return null;
         }
+
+        // Perform validation based on certain criteria
+        // For example, let's assume payment is valid if the payment amount is greater
+        // than 0
+        if (payment.getPaymentAmount() > 500) {
+            // Update payment status to "Paid"
+            payment.setPaymentStatus("Paid");
+        } else {
+            // Update payment status to "Rejected"
+            payment.setPaymentStatus("Rejected");
+        }
+
+        // Save the updated payment
+        return paymentRepository.save(payment);
     }
 }

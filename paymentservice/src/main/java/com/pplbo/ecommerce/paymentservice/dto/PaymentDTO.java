@@ -1,21 +1,29 @@
-package com.pplbo.ecommerce.paymentservice.model;
+package com.pplbo.ecommerce.paymentservice.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.Date;
 
-@Entity
-public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PaymentDTO {
     private Long paymentId;
     private Long orderId;
     private String paymentMethod;
     private Date paymentDate;
     private String paymentStatus;
     private Double paymentAmount;
+
+    // Default Constructor
+    public PaymentDTO() {
+    }
+
+    // Constructor with parameters
+            
+    public PaymentDTO(Long paymentId, Long orderId, String paymentMethod, Date paymentDate, String paymentStatus, Double paymentAmount) {
+        this.paymentId = paymentId;
+        this.orderId = orderId;
+        this.paymentMethod = paymentMethod;
+        this.paymentDate = paymentDate;
+        this.paymentStatus = paymentStatus;
+        this.paymentAmount = paymentAmount;
+    }
 
     // Getters
     public Long getPaymentId() {
