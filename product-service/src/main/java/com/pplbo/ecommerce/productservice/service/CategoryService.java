@@ -31,4 +31,10 @@ public class CategoryService {
         .map(category -> new CategoryResponse(category.getCategoryId(), category.getCategoryName()))
         .collect(Collectors.toList());
     }
+
+    //Remove category by name
+    public void removeCategory(String categoryName) {
+        Category category = categoryRepository.findByCategoryName(categoryName);
+        categoryRepository.delete(category);
+    }
 }
