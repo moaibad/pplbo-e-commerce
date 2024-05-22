@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  product-service-db:
+    image: postgres:12
+    container_name: product-service-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: productdb
+    ports: 
+      - "5432:5432"
+    volumes:
+      - product-service-db-data:/var/lib/postgresql/data
+
+volumes:
+  product-service-db-data:
+
