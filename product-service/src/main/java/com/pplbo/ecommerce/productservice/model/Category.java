@@ -17,7 +17,6 @@ import jakarta.persistence.Column;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
