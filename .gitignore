@@ -35,3 +35,11 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+### Payment Service ###
+payment-service/target/
+payment-service/build/
+payment-service/.gradle/
+payment-service/docker
+payment-service/mysql
