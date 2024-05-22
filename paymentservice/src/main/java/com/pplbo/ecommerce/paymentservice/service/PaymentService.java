@@ -20,7 +20,7 @@ public class PaymentService {
 
     @Autowired
     public PaymentService(PaymentRepository paymentRepository, PaymentGatewayService paymentGatewayService,
-            PaymentResponseProducer paymentResponseProducer) {
+                          PaymentResponseProducer paymentResponseProducer) {
         this.paymentRepository = paymentRepository;
         this.paymentGatewayService = paymentGatewayService;
         this.paymentResponseProducer = paymentResponseProducer;
@@ -40,13 +40,20 @@ public class PaymentService {
         payment.setPaymentMethodDetails(request.getPaymentMethod().getDetails().toString());
         payment.setCreatedAt(LocalDateTime.now());
 
+        // Set payment status based on authorization result
+        if (isAuthorized) {
+            payment.setStatus("AUTHORIZED");
+        } else {
+            payment.setStatus("DECLINED");
+        }
+
         paymentRepository.save(payment);
 
         // Prepare and send payment response
         PaymentResponse response = new PaymentResponse();
         response.setPaymentId(payment.getId());
         response.setOrderId(payment.getOrderId());
-        response.setStatus(isAuthorized ? "AUTHORIZED" : "DECLINED");
+        response.setStatus(payment.getStatus());
         response.setAmount(payment.getAmount());
         response.setCurrency(payment.getCurrency());
         response.setPaymentMethod(payment.getPaymentMethodType(), payment.getPaymentMethodDetails());
