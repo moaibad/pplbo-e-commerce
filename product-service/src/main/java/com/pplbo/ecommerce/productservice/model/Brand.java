@@ -1,23 +1,27 @@
-import org.hibernate.mapping.List;
+// import org.hibernate.mapping.List;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+import java.util.List;
 
+@Entity
+@Table(name = "brand")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 public class Brand {
 
     @Id
     private char brandID;
 
-    private string brangName;
+    private String brandName;
 
     private List<Product> products; // This is a list of products that are associated with this brand
 }
