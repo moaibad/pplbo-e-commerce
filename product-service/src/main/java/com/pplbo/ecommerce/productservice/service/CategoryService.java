@@ -41,9 +41,8 @@ public class CategoryService {
     }
 
     //get category by id
-    public CategoryResponse getCategoryById(Int categoryId) {
+    public CategoryResponse getCategoryById(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId).orElse(null);
-        return category.stream()
-        .map(category -> new CategoryResponse(category.getCategoryId(), category.getCategoryName()));
+        return new CategoryResponse(category.getCategoryId(), category.getCategoryName());
     }
 }
