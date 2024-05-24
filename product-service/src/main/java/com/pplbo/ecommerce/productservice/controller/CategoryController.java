@@ -31,12 +31,17 @@ public class CategoryController {
         return categoryService.createCategory(categoryRequest);
     }
 
-    @GetMapping
+    @GetMapping("/allcategory")
     public List<CategoryResponse> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
-    @DeleteMapping
+    @GetMapping("/{id}")
+    public CategoryResponse getCategoryById(@RequestBody CategoryRequest categoryRequest) {
+        return categoryService.getCategoryById(categoryRequest.categoryName());
+    }
+
+    @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeCategory(@RequestBody CategoryRequest categoryRequest) {
         categoryService.removeCategory(categoryRequest.categoryName());
