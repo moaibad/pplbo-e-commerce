@@ -17,6 +17,7 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    //Create category
     public CategoryResponse createCategory(CategoryRequest categoryRequest) {
         Category category = Category.builder()
             .categoryName(categoryRequest.categoryName())
@@ -25,6 +26,7 @@ public class CategoryService {
         return new CategoryResponse(category.getCategoryId(), category.getCategoryName());
     }
 
+    //Get all categories
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll()
         .stream()
@@ -36,5 +38,11 @@ public class CategoryService {
     public void removeCategory(String categoryName) {
         Category category = categoryRepository.findByCategoryName(categoryName);
         categoryRepository.delete(category);
+    }
+
+    //get category by id
+    public CategoryResponse getCategoryById(Integer categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        return new CategoryResponse(category.getCategoryId(), category.getCategoryName());
     }
 }
