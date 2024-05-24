@@ -7,10 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/products/brand")
+@RequestMapping("/api/brand")
 @RequiredArgsConstructor
 public class BrandController {
 
@@ -20,27 +18,5 @@ public class BrandController {
     @ResponseStatus(HttpStatus.CREATED)
     public Brand createBrand(@RequestBody BrandRequest brandRequest){
         return brandService.createBrand(brandRequest);
-    }
-
-    @GetMapping("/{id}")
-    public Brand getBrandById(@PathVariable("id") Integer id){
-        return brandService.getBrandById(id);
-    }
-
-    @DeleteMapping("/delete")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeBrand(@RequestBody Integer id){
-        brandService.removeBrand(id);
-    }
-
-    //change brand name
-    @PutMapping("/{id}")
-    public Brand updateBrand(@PathVariable Integer id, @RequestBody BrandRequest brandRequest){
-        return brandService.updateBrand(id, brandRequest);
-    }
-
-    @GetMapping("/allbrand")
-    public List<Brand> getAllBrands(){
-        return brandService.getAllBrands();
     }
 }
