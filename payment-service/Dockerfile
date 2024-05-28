@@ -1,14 +1,26 @@
-# Use the official OpenJDK image as the base image
-FROM openjdk:17-jdk-slim
+# Use an OpenJDK base image
+FROM openjdk:23-ea-17-jdk-slim
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy the JAR file from the build context into the container
-COPY build/libs/paymentservice-0.0.1-SNAPSHOT.jar app.jar
+# Copy the Gradle wrapper and build files
+COPY gradlew /app/
+COPY gradle /app/gradle
+COPY build.gradle /app/
+COPY settings.gradle /app/
 
-# Expose the port that the application will run on
+# Copy the source code
+COPY src /app/src
+
+# Give execution permissions to the gradlew script
+RUN chmod +x ./gradlew
+
+# Build the application
+RUN ./gradlew build 
+
+# Expose the port the application runs on
 EXPOSE 8080
 
-# Define the command to run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application
+CMD ["java", "-jar", "build/libs/payment-service.jar"]
