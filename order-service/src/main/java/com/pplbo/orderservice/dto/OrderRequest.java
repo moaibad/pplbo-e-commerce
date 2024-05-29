@@ -9,5 +9,5 @@ public record OrderRequest(
     Double totalPrice,
     List<OrderLineItemRequest> orderLineItems,
     ShippingRequest shipping,
-    String customerName
+    CustomerRequest customer
 ) {}

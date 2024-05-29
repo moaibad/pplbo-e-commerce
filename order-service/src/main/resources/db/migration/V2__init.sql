@@ -24,7 +24,12 @@ CREATE TABLE IF NOT EXISTS orders (
     CONSTRAINT fk_shipping
         FOREIGN KEY (shipping_id) 
         REFERENCES shippings (shipping_id)
-        ON DELETE SET NULL
+        ON DELETE SET NULL,
+    CONSTRAINT fk_customer
+        FOREIGN KEY (customer_id) 
+        REFERENCES customers (customer_id)
+        ON DELETE SET NULL,
+    CONSTRAINT unique_customer_id UNIQUE (customer_id)
 );
 
 -- Create the order_line_items table

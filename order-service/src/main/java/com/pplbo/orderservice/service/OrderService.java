@@ -60,7 +60,8 @@ public class OrderService {
         Customer customer = order.getCustomer();
         CustomerResponse customerResponse = new CustomerResponse(
             customer.getCustomerId(),
-            customer.getNama()
+            customer.getFirstName(),
+            customer.getLastName()
         );
 
         return new OrderResponse(
@@ -90,9 +91,11 @@ public class OrderService {
         );
     
         // Buat objek Customer berdasarkan nama pelanggan dari request body
+        CustomerRequest customerRequest = orderRequest.customer();
         Customer customer = new Customer(
             null, //id customer set null (karna auto increment di DB)
-            orderRequest.customerName() 
+            customerRequest.firstName(),
+            customerRequest.lastName()
         );
     
         Order order = new Order(
