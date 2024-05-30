@@ -17,46 +17,14 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
+    public List<PaymentResponse> getAllPayments() {
+        return paymentRepository.findAll().stream()
+                .map(this::toPaymentResponse)
+                .collect(Collectors.toList());
     }
 
     public boolean isPaymentExist(Long id) {
         return paymentRepository.existsById(id);
-    }
-    // public Payment createPayment(Payment payment) {
-    // return paymentRepository.save(payment);
-    // }
-
-    // Method to create a new payment
-    public Payment createPayment(Payment payment) {
-        Payment createdPayment = paymentRepository.save(payment);
-
-        // Validate and update payment status after creating the payment
-        validateAndUpdatePaymentStatus(createdPayment.getPaymentId());
-
-        return createdPayment;
-    }
-
-    // Method to update an existing payment
-    public Payment updatePayment(Payment payment) {
-        Payment updatedPayment = paymentRepository.save(payment);
-
-        // Validate and update payment status after updating the payment
-        validateAndUpdatePaymentStatus(updatedPayment.getPaymentId());
-
-        return updatedPayment;
-    }
-
-    public Payment validateAndUpdatePaymentStatus(Long paymentId) {
-        // Retrieve the payment from the repository
-        Payment payment = paymentRepository.findById(paymentId).orElse(null);
-
-        // Check if the payment exists
-        if (payment == null) {
-            // Handle case where payment does not exist
-            return null;
-        }
     }
 
     public Optional<PaymentResponse> getPaymentById(Long paymentId) {
