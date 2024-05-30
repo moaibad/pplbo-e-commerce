@@ -36,4 +36,6 @@ public class Order {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
     private Customer customer;
+
+    private Long paymentId;
 }

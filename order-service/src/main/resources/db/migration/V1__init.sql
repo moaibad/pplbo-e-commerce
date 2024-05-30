@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS orders (
     total_price DOUBLE NOT NULL,
     shipping_id BIGINT,
     customer_id BIGINT,
+    payment_id BIGINT,
     CONSTRAINT fk_shipping
         FOREIGN KEY (shipping_id) 
         REFERENCES shippings (shipping_id)

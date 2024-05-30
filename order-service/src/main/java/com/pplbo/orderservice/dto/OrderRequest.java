@@ -9,5 +9,6 @@ public record OrderRequest(
     Double totalPrice,
     List<OrderLineItemRequest> orderLineItems,
     ShippingRequest shipping,
-    CustomerRequest customer
+    CustomerRequest customer,
+    Long paymentId
 ) {}

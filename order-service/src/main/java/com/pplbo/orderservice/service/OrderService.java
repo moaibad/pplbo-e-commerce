@@ -18,12 +18,16 @@ import com.pplbo.orderservice.model.OrderLineItem;
 import com.pplbo.orderservice.model.Shipping;
 import com.pplbo.orderservice.model.Customer;
 import com.pplbo.orderservice.repository.OrderRepository;
+import com.pplbo.orderservice.client.PaymentClient;
 
 @Service
 public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private PaymentClient paymentClient;
 
     public List<OrderResponse> findAll() {
         return orderRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
@@ -34,8 +38,14 @@ public class OrderService {
     }
 
     public OrderResponse save(OrderRequest orderRequest) {
-        Order order = convertToEntity(orderRequest);
-        return convertToDto(orderRepository.save(order));
+        Boolean isPaymentReqExist = paymentClient.isPaymentExist(orderRequest.paymentId());
+
+        if (isPaymentReqExist) {
+            Order order = convertToEntity(orderRequest);
+            return convertToDto(orderRepository.save(order));
+        } else {
+            throw new RuntimeException("Payment request does not exist");
+        }
     }
 
     public void deleteById(Long id) {
@@ -71,7 +81,8 @@ public class OrderService {
             order.getTotalPrice(),
             orderLineItems,
             shippingResponse,
-            customerResponse
+            customerResponse,
+            order.getPaymentId()
         );
     }
 
@@ -105,7 +116,8 @@ public class OrderService {
             orderRequest.totalPrice(),
             orderLineItems,
             shipping,
-            customer
+            customer,
+            orderRequest.paymentId()
         );
     
         orderLineItems.forEach(item -> item.setOrder(order));

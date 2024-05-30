@@ -10,5 +10,6 @@ public record OrderResponse(
     Double totalPrice,
     List<OrderLineItemResponse> orderLineItems,
     ShippingResponse shipping,
-    CustomerResponse customer
+    CustomerResponse customer,
+    Long paymentId
 ) {}
