@@ -36,5 +36,5 @@ public class Cart {
     @JoinTable(name = "cart_product", joinColumns = @JoinColumn(name = "cart_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products = new ArrayList<>();
 
-    private Integer totalPrice;
+    private Long totalPrice;
 }
