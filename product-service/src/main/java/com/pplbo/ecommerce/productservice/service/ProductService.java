@@ -50,4 +50,9 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    public ProductResponse getProductById(Integer id){
+        Product product = productRepository.findById(id).orElse(null);
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+    }
+
 }

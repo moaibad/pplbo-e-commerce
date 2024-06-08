@@ -40,4 +40,9 @@ public class ProductController {
         productService.deleteProduct(id);
     }
 
+    @GetMapping("/{id}")
+    public ProductResponse getProductById(@PathVariable Integer id){
+        return productService.getProductById(id);
+    }
+
 }
