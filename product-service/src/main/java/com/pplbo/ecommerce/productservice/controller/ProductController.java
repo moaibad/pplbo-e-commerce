@@ -34,4 +34,10 @@ public class ProductController {
         return productService.updateProduct(id, productRequest);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@RequestBody Integer id){
+        productService.deleteProduct(id);
+    }
+
 }

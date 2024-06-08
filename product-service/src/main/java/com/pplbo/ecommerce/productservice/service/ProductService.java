@@ -46,4 +46,8 @@ public class ProductService {
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
     }
 
+    public void deleteProduct(Integer id){
+        productRepository.deleteById(id);
+    }
+
 }
