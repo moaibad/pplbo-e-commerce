@@ -35,4 +35,24 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public ProductResponse updateProduct(Integer id, ProductRequest productRequest){
+        Product product = productRepository.findById(id).orElse(null);
+        product.setName(productRequest.name());
+        product.setPrice(productRequest.price());
+        product.setDescription(productRequest.description());
+        product.setBrandId(productRequest.brandId());
+        productRepository.save(product);
+
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+    }
+
+    public void deleteProduct(Integer id){
+        productRepository.deleteById(id);
+    }
+
+    public ProductResponse getProductById(Integer id){
+        Product product = productRepository.findById(id).orElse(null);
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+    }
+
 }
