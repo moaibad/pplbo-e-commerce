@@ -53,4 +53,10 @@ public class ProductController {
     public ProductCategoriesResponse addCategoryToProduct(@PathVariable Integer id, @RequestBody ProductCategoriesRequest productCategoriesRequest){
         return productService.addCategoryToProduct(id, productCategoriesRequest);
     }
+
+    @GetMapping("/category/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductCategoriesResponse getCategoryOfProduct(@PathVariable Integer id){
+        return productService.getCategoryOfProduct(id);
+    }
 }
