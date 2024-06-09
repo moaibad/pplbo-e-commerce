@@ -21,7 +21,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/products/category")
+@RequestMapping("api/product/category")
 @RequiredArgsConstructor
 
 public class CategoryController {
@@ -33,7 +33,7 @@ public class CategoryController {
         return categoryService.createCategory(categoryRequest);
     }
 
-    @GetMapping("/allcategory")
+    @GetMapping("/all")
     public List<CategoryResponse> getAllCategories() {
         return categoryService.getAllCategories();
     }
@@ -43,7 +43,7 @@ public class CategoryController {
         return categoryService.getCategoryById(categoryId);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeCategory(@RequestBody CategoryRequest categoryRequest) {
         categoryService.removeCategory(categoryRequest.categoryName());
