@@ -41,8 +41,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
     implementation 'org.springframework.kafka:spring-kafka:3.2.0'
 
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	// implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	// implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 tasks.named('test') {
