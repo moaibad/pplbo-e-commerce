@@ -21,7 +21,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/products/category")
+@RequestMapping("api/product/category")
 @RequiredArgsConstructor
 
 public class CategoryController {
