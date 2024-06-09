@@ -35,7 +35,7 @@ public class Routes {
                             return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
                         })
                         .uri("http://localhost:8082"))
-                .route("product_service", r -> r.path("/api/products/**")
+                .route("product_service", r -> r.path("/api/product/**")
                         .filters(f -> {
                             logger.info("Applying filters for product service route");
                             return f.rewritePath("/api/(?<segment>.*)", "/${segment}");
