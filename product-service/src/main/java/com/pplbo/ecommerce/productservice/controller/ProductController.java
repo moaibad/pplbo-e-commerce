@@ -1,8 +1,11 @@
 package com.pplbo.ecommerce.productservice.controller;
 
+import com.pplbo.ecommerce.productservice.dto.ProductCategoriesRequest;
+import com.pplbo.ecommerce.productservice.dto.ProductCategoriesResponse;
 import com.pplbo.ecommerce.productservice.dto.ProductRequest;
 import com.pplbo.ecommerce.productservice.dto.ProductResponse;
 import com.pplbo.ecommerce.productservice.model.Product;
+import com.pplbo.ecommerce.productservice.model.ProductCategories;
 import com.pplbo.ecommerce.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,4 +48,9 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
+    @PostMapping("/category/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductCategoriesResponse addCategoryToProduct(@PathVariable Integer id, @RequestBody ProductCategoriesRequest productCategoriesRequest){
+        return productService.addCategoryToProduct(id, productCategoriesRequest);
+    }
 }
