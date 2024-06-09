@@ -2,7 +2,10 @@ package com.pplbo.ecommerce.paymentservice.controller;
 
 import com.pplbo.ecommerce.paymentservice.dto.PaymentRequest;
 import com.pplbo.ecommerce.paymentservice.dto.PaymentResponse;
+import com.pplbo.ecommerce.paymentservice.event.ValidatePayment;
+import com.pplbo.ecommerce.paymentservice.model.Payment;
 import com.pplbo.ecommerce.paymentservice.service.PaymentService;
+import com.pplbo.ecommerce.paymentservice.service.PaymentProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,9 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private PaymentProducerService paymentProducerService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -39,8 +45,10 @@ public class PaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentResponse createPayment(@RequestBody PaymentRequest paymentRequest) {
-        return paymentService.createPayment(paymentRequest);
+    public Payment createPayment(@RequestBody Payment payment) {
+        ValidatePayment validatePayment = new ValidatePayment(payment);
+        paymentProducerService.sendPaymentEvent(validatePayment);
+        return payment;
     }
 
     @PutMapping("/{id}")
