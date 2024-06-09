@@ -23,15 +23,16 @@ public class ProductService {
                 .price(productRequest.price())
                 .description(productRequest.description())
                 .brandId(productRequest.brandId())
+                .image(productRequest.image())
                 .build();
         productRepository.save(product);
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId(), product.getImage());
     }
 
     public List<ProductResponse> getAllProducts(){
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId()))
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId(), product.getImage()))
                 .collect(Collectors.toList());
     }
 
@@ -41,9 +42,10 @@ public class ProductService {
         product.setPrice(productRequest.price());
         product.setDescription(productRequest.description());
         product.setBrandId(productRequest.brandId());
+        product.setImage(productRequest.image());
         productRepository.save(product);
 
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId(), product.getImage());
     }
 
     public void deleteProduct(Integer id){
@@ -52,7 +54,7 @@ public class ProductService {
 
     public ProductResponse getProductById(Integer id){
         Product product = productRepository.findById(id).orElse(null);
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getDescription(), product.getBrandId(), product.getImage());
     }
 
 }
