@@ -34,7 +34,7 @@ public class ProductReviewController {
         return productReviewService.createProductReview(productReviewRequest);
     }
 
-    @GetMapping("/allreview")
+    @GetMapping("/all")
     public List<ProductReviewResponse> getAllProductReviews() {
         return productReviewService.getAllProductReviews();
     }
@@ -44,9 +44,9 @@ public class ProductReviewController {
         return productReviewService.getProductReviewById(id);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeProductReview(@RequestBody ProductReviewRequest productReviewRequest) {
-        productReviewService.removeProductReview(productReviewRequest.id());
+    public void removeProductReview(@PathVariable("id") Integer id) {
+        productReviewService.removeProductReview(id);
     }
 }
