@@ -27,9 +27,9 @@ public class BrandController {
         return brandService.getBrandById(id);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeBrand(@RequestBody Integer id){
+    public void removeBrand(@PathVariable("id") Integer id){
         brandService.removeBrand(id);
     }
 
@@ -39,7 +39,7 @@ public class BrandController {
         return brandService.updateBrand(id, brandRequest);
     }
 
-    @GetMapping("/allbrand")
+    @GetMapping("/all")
     public List<Brand> getAllBrands(){
         return brandService.getAllBrands();
     }
