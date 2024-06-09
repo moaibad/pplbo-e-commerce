@@ -115,4 +115,15 @@ public class ProductService {
         return new ProductCategoriesResponse(id, categoryNames);
     }
 
+
+    public List<ProductDetailResponse> getAllProductDetail(){
+        List<Product> products = productRepository.findAll();
+
+        List<ProductDetailResponse> productDetailResponses = new ArrayList<>();
+
+        for(Product product : products){
+            
+        }
+    }
+
 }
