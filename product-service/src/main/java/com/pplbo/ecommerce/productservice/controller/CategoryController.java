@@ -38,10 +38,10 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/{id}")
-    public CategoryResponse getCategoryById(@PathVariable("id") int categoryId) {
-        return categoryService.getCategoryById(categoryId);
-    }
+//    @GetMapping("/{id}")
+//    public CategoryResponse getCategoryById(@PathVariable("id") int categoryId) {
+//        return categoryService.getCategoryById(categoryId);
+//    }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)

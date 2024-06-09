@@ -1,9 +1,6 @@
 package com.pplbo.ecommerce.productservice.controller;
 
-import com.pplbo.ecommerce.productservice.dto.ProductCategoriesRequest;
-import com.pplbo.ecommerce.productservice.dto.ProductCategoriesResponse;
-import com.pplbo.ecommerce.productservice.dto.ProductRequest;
-import com.pplbo.ecommerce.productservice.dto.ProductResponse;
+import com.pplbo.ecommerce.productservice.dto.*;
 import com.pplbo.ecommerce.productservice.model.Product;
 import com.pplbo.ecommerce.productservice.model.ProductCategories;
 import com.pplbo.ecommerce.productservice.service.ProductService;
@@ -58,5 +55,11 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public ProductCategoriesResponse getCategoryOfProduct(@PathVariable Integer id){
         return productService.getCategoryOfProduct(id);
+    }
+
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductDetailResponse> getAllProductDetail(){
+        return productService.getAllProductDetail();
     }
 }
