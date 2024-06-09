@@ -1,12 +1,16 @@
 package com.pplbo.ecommerce.productservice.event;
 
-import com.pplbo.ecommerce.productservice.model.Product;
-import com.pplbo.ecommerce.orderservice.model.Order;
+import com.pplbo.ecommerce.productservice.model.User;
+
 
 public class OrderCreatedEvent {
     private User user;
 
-    public UserCreatedEvent() {
+        // Konstruktor default
+    public OrderCreatedEvent() {}
+
+    public OrderCreatedEvent(User user) {
+        this.user = user;
     }
 
     public User getUser() {
