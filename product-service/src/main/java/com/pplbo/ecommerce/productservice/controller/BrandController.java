@@ -27,7 +27,7 @@ public class BrandController {
         return brandService.getBrandById(id);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeBrand(@RequestBody Integer id){
         brandService.removeBrand(id);
