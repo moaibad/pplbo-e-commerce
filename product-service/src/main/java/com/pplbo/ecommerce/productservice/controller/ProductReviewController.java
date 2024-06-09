@@ -44,7 +44,7 @@ public class ProductReviewController {
         return productReviewService.getProductReviewById(id);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeProductReview(@RequestBody ProductReviewRequest productReviewRequest) {
         productReviewService.removeProductReview(productReviewRequest.id());
