@@ -21,7 +21,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/products/review")
+@RequestMapping("api/product/review")
 @RequiredArgsConstructor
 
 public class ProductReviewController {
