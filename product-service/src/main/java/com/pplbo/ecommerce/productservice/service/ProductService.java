@@ -94,4 +94,25 @@ public class ProductService {
         return new ProductCategoriesResponse(id, categoryNames);
     }
 
+    public ProductCategoriesResponse getCategoryOfProduct(Integer id){
+        // Fetch ProductCategories
+        List<ProductCategories> productCategories = productCategoriesRepository.findByProductId(id);
+
+        // Extract category IDs
+        List<Integer> categoryIds = productCategories.stream()
+                .map(ProductCategories::getCategoryId)
+                .collect(Collectors.toList());
+
+        // Fetch Categories
+        List<Category> categories = categoryRepository.findByCategoryIdIn(categoryIds);
+
+        // Extract category names
+        List<String> categoryNames = categories.stream()
+                .map(Category::getCategoryName)
+                .collect(Collectors.toList());
+
+        // Create and return ProductCategoriesResponse
+        return new ProductCategoriesResponse(id, categoryNames);
+    }
+
 }
