@@ -75,4 +75,18 @@ public class CartService {
 
         cart.getProductsToBuy().add(productToBuy);
     }
+
+    public void removeProductFromCart(Long cartId, Long productId) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
+
+        boolean removed = cart.getProductsToBuy()
+                .removeIf(productToBuy -> productToBuy.getProduct().getId().equals(productId));
+
+        if (!removed) {
+            throw new NoSuchElementException("Product not found in cart with ID: " + productId);
+        }
+
+        cartRepository.save(cart);
+    }
 }
