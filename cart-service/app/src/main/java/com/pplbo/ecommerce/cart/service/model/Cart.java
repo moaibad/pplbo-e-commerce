@@ -36,9 +36,13 @@ public class Cart {
     private String userID;
 
     @OneToMany(mappedBy = "cart")
-    private List<ProductToBuy> productsToBuy = new ArrayList<>(); // Changed to one-to-many
+    @JsonIgnoreProperties("cart")
+    private List<ProductToBuy> productsToBuy = new ArrayList<>();
 
     private Long totalPrice;
 
     // Getters, setters, and other methods
+    public void addProductToBuy(ProductToBuy product) {
+        this.productsToBuy.add(product);
+    }
 }

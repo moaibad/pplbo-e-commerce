@@ -12,6 +12,8 @@ import com.pplbo.ecommerce.cart.service.model.ProductToBuy;
 import com.pplbo.ecommerce.cart.service.repository.CartRepository;
 import com.pplbo.ecommerce.cart.service.repository.ProductRepository;
 
+import jakarta.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,6 +27,9 @@ public class CartService {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    ProductToBuyService productToBuyService;
 
     public List<Cart> getAllCarts() {
         return cartRepository.findAll();
@@ -44,14 +49,16 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
-    public void addProductToCart(Long cartId, Long productId, Integer quantityToBuy) {
+    @Transactional
+    public Cart addProductToCart(Long cartId, Long productId, Integer quantityToBuy) {
         Optional<Cart> optionalCart = cartRepository.findById(cartId);
         Product product = productService.getProductById(productId)
                 .orElseThrow(() -> new NoSuchElementException("Product not found with ID: " + productId));
-
+        System.out.println(product.getName() + product.getId());
         Cart cart = optionalCart.orElseThrow(() -> new NoSuchElementException("Cart not found with ID: " + cartId));
 
         // Check if the product already exists in the cart
+        boolean productExistsInCart = false;
         for (ProductToBuy productToBuy : cart.getProductsToBuy()) {
             if (productToBuy.getProduct().getId().equals(productId)) {
                 // Product already exists, update quantity to buy
@@ -61,22 +68,26 @@ public class CartService {
                             "Not enough quantity available for product: " + product.getName());
                 }
                 productToBuy.setQuantityToBuy(newQuantityToBuy);
-                return;
+                productExistsInCart = true;
+                break;
             }
         }
 
         // Product does not exist in the cart, add new ProductToBuy
-        if (quantityToBuy > product.getQuantity()) {
-            throw new IllegalArgumentException("Not enough quantity available for product: " + product.getName());
+        if (!productExistsInCart) {
+            if (quantityToBuy > product.getQuantity()) {
+                throw new IllegalArgumentException("Not enough quantity available for product: " + product.getName());
+            }
+
+            ProductToBuy productToBuy = ProductToBuy.builder()
+                    .product(product)
+                    .cart(cart)
+                    .quantityToBuy(quantityToBuy)
+                    .build();
+            cart.addProductToBuy(productToBuy);
+            productToBuyService.saveProductToBuy(productToBuy);
         }
-
-        ProductToBuy productToBuy = ProductToBuy.builder()
-                .product(product)
-                .cart(cart)
-                .quantityToBuy(quantityToBuy)
-                .build();
-
-        cart.getProductsToBuy().add(productToBuy);
+        return cartRepository.save(cart);
     }
 
     public void removeProductFromCart(Long cartId, Long productId) {
