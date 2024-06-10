@@ -4,39 +4,34 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.ArrayList;
 
 @Entity
-@Table(name = "product")
+@Table(name = "product_to_buy")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Product {
+public class ProductToBuy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private Long price;
-    private String description;
-    private Integer quantity;
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
-    private Integer brandId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductToBuy> productsToBuy = new ArrayList<>(); // Changed to one-to-many
+    private Integer quantityToBuy;
 
     // Getters, setters, and other methods
 }

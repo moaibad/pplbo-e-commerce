@@ -4,10 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,13 +30,13 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    @lombok.NonNull
     private String userID;
 
-    @ManyToMany
-    @JoinTable(name = "cart_product", joinColumns = @JoinColumn(name = "cart_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
-    @JsonIgnoreProperties("carts")
-    private List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "cart")
+    private List<ProductToBuy> productsToBuy = new ArrayList<>(); // Changed to one-to-many
 
     private Long totalPrice;
+
+    // Getters, setters, and other methods
 }
