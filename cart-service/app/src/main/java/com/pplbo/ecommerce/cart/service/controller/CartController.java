@@ -69,13 +69,14 @@ public class CartController {
 
     @PostMapping("/{cartId}/products/{productId}")
     public Cart addProductToCart(@PathVariable Long cartId, @PathVariable Long productId,
-            @RequestParam Integer quantityToBuy) {
-        return cartService.addProductToCart(cartId, productId, quantityToBuy);
+            @RequestParam Integer quantity) {
+        return cartService.addProductToCart(cartId, productId, quantity);
     }
 
     @DeleteMapping("/{cartId}/products/{productId}")
-    public ResponseEntity<?> removeProductFromCart(@PathVariable Long cartId, @PathVariable Long productId) {
-        cartService.removeProductFromCart(cartId, productId);
-        return ResponseEntity.noContent().build();
+    public Cart removeProductFromCart(@PathVariable Long cartId, @PathVariable Long productId,
+            @RequestParam Integer quantity) {
+        Cart cart = cartService.removeProductFromCart(cartId, productId, quantity);
+        return cart;
     }
 }

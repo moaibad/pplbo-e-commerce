@@ -37,9 +37,5 @@ public class Product {
     private Integer quantity;
     private Integer brandId;
 
-    @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product") // Ignore the 'product' property when serializing
-    private List<ProductToBuy> productsToBuy = new ArrayList<>();
-
     // Getters and setters
 }
