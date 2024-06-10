@@ -25,6 +25,7 @@ public class PaymentService {
 
         public boolean isPaymentExist(Long id) {
                 return paymentRepository.existsById(id);
+
         }
 
         public Optional<PaymentResponse> getPaymentById(Long paymentId) {
@@ -35,6 +36,20 @@ public class PaymentService {
         public PaymentResponse createPayment(PaymentRequest paymentRequest) {
                 Payment payment = toPayment(paymentRequest);
                 return toPaymentResponse(paymentRepository.save(payment));
+        }
+
+        public Payment makePayment(Payment payment) {
+                return paymentRepository.save(payment);
+        }
+
+        public Payment check_Payment(Payment payment) {
+                // Validate payment status
+                if (payment.getPaymentAmount() > 500) {
+                        payment.setPaymentStatus("PAYMENT_SUCCESS");
+                } else {
+                        payment.setPaymentStatus("PAYMENT_FAILED");
+                }
+                return payment;
         }
 
         public PaymentResponse updatePayment(Long paymentId, PaymentRequest paymentRequest) {
