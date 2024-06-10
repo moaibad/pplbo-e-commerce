@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pplbo.ecommerce.cart.service.dto.CartProductRequest;
 import com.pplbo.ecommerce.cart.service.dto.CartRequest;
+import com.pplbo.ecommerce.cart.service.dto.ProductRequest;
+import com.pplbo.ecommerce.cart.service.dto.ProductResponse;
 import com.pplbo.ecommerce.cart.service.model.Cart;
 import com.pplbo.ecommerce.cart.service.service.CartService;
 import com.pplbo.ecommerce.cart.service.service.ProductService;
@@ -40,8 +42,12 @@ public class CartController {
 
     @PostMapping("/{id}/add")
     public Cart addProductToCart(@PathVariable Long id, @RequestBody CartProductRequest productToAdd) {
-        productService.addNewProduct(productToAdd.product());
         return cartService.addProductToCart(id, productToAdd);
+    }
+
+    @PostMapping("/product/add")
+    public ProductResponse addProductData(@RequestBody ProductRequest productToAdd) {
+        return productService.createProduct(productToAdd);
     }
 
     @GetMapping

@@ -62,12 +62,13 @@ public class CartService {
         Optional<Cart> result = cartRepository.findById(id);
         Cart cart = result.get();
         List<Product> products = cart.getProducts();
-        System.out.println(products.get(products.size() - 1).getName());
-        products.add(cartProductRequest.product());
-        // System.out.println(products.get(products.size() - 1).getName());
-        Long totalPrice = cart.getTotalPrice()
-                + (cartProductRequest.product().getPrice() * cartProductRequest.totalPrice());
-        cart.setTotalPrice(totalPrice);
+        Optional<Product> query = productRepository.findById(cartProductRequest.product().getId());
+        if (query.isPresent()) {
+            products.add(cartProductRequest.product());
+            Long totalPrice = cart.getTotalPrice()
+                    + (cartProductRequest.product().getPrice() * cartProductRequest.totalPrice());
+            cart.setTotalPrice(totalPrice);
+        }
         // Save the cart
         return cartRepository.save(cart);
     }
