@@ -13,7 +13,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,11 +35,11 @@ public class Product {
     private Long price;
     private String description;
     private Integer quantity;
-
     private Integer brandId;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductToBuy> productsToBuy = new ArrayList<>(); // Changed to one-to-many
+    @JsonIgnoreProperties("product") // Ignore the 'product' property when serializing
+    private List<ProductToBuy> productsToBuy = new ArrayList<>();
 
-    // Getters, setters, and other methods
+    // Getters and setters
 }

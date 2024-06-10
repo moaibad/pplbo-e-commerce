@@ -57,7 +57,7 @@ public class CartController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cart createCart(@RequestBody Cart cart) {
+    public Cart createCart(@RequestBody CartRequest cart) {
         return cartService.createCart(cart);
     }
 
@@ -68,9 +68,9 @@ public class CartController {
     }
 
     @PostMapping("/{cartId}/products/{productId}")
-    public void addProductToCart(@PathVariable Long cartId, @PathVariable Long productId,
+    public Cart addProductToCart(@PathVariable Long cartId, @PathVariable Long productId,
             @RequestParam Integer quantityToBuy) {
-        cartService.addProductToCart(cartId, productId, quantityToBuy);
+        return cartService.addProductToCart(cartId, productId, quantityToBuy);
     }
 
     @DeleteMapping("/{cartId}/products/{productId}")
