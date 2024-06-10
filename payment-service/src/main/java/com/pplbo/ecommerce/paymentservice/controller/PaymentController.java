@@ -38,15 +38,12 @@ public class PaymentController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/exists")
-    public boolean isPaymentExist(@RequestParam Long id) {
-        return paymentService.isPaymentExist(id);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Payment createPayment(@RequestBody Payment payment) {
         ValidatePayment validatePayment = new ValidatePayment(payment);
+        payment = paymentService.check_Payment(payment);
+        payment = paymentService.makePayment(payment);
         paymentProducerService.sendPaymentEvent(validatePayment);
         return payment;
     }
