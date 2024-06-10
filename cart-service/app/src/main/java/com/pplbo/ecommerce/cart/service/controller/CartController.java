@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pplbo.ecommerce.cart.service.dto.CartProductRequest;
 import com.pplbo.ecommerce.cart.service.dto.CartRequest;
 import com.pplbo.ecommerce.cart.service.model.Cart;
 import com.pplbo.ecommerce.cart.service.service.CartService;
+import com.pplbo.ecommerce.cart.service.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,10 +29,19 @@ public class CartController {
     @Autowired
     private final CartService cartService;
 
+    @Autowired
+    private final ProductService productService;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cart createCart(@RequestBody CartRequest cartRequest) {
         return cartService.createCart(cartRequest);
+    }
+
+    @PostMapping("/{id}/add")
+    public Cart addProductToCart(@PathVariable Long id, @RequestBody CartProductRequest productToAdd) {
+        productService.addNewProduct(productToAdd.product());
+        return cartService.addProductToCart(id, productToAdd);
     }
 
     @GetMapping

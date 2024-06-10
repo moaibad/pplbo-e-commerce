@@ -28,6 +28,10 @@ public class ProductService {
                 .build();
     }
 
+    public void addNewProduct(Product product) {
+        productRepository.save(product);
+    }
+
     public ProductResponse createProduct(ProductRequest productRequest) {
         Product product = generateProduct(productRequest);
         productRepository.save(product);

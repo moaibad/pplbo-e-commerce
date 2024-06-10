@@ -11,6 +11,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 
 @Entity
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIgnoreProperties({ "carts" })
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +38,7 @@ public class Product {
     private Integer quantityToBuy;
 
     private Integer brandId;
-    // Define the many-to-many relationship with carts
+
     @ManyToMany(mappedBy = "products")
     private List<Cart> carts = new ArrayList<>();
 }
