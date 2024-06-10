@@ -31,7 +31,7 @@ public class BrandServiceTest {
 
     @BeforeEach
     void setUp() {
-        brandRequest = new BrandRequest("Nestle", "https://www.nestle.co.id/themes/custom/da_vinci_code/logo.svg");
+        brandRequest = new BrandRequest("Nestle", "https://www.nestle.co.id/themes/custom/da_vinci_code/logo.svg", "categories");
     }
 
     @Test
@@ -50,8 +50,9 @@ public class BrandServiceTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             brandService.createBrand(brandRequest);
         });
+        
 
-        assertEquals("Brand already exists", exception.getMessage());
+        assertEquals("Brand already exist", exception.getMessage());
     }
 
     @Test
@@ -75,7 +76,7 @@ public class BrandServiceTest {
     @Test
     void testUpdateBrand() {
         Brand createdBrand = brandService.createBrand(brandRequest);
-        BrandRequest updatedRequest = new BrandRequest("Univeler", "https://www.nestle.co.id/themes/custom/da_vinci_code/logo.svg");
+        BrandRequest updatedRequest = new BrandRequest("Univeler", "https://www.nestle.co.id/themes/custom/da_vinci_code/logo.svg", "cate");
 
         Brand updatedBrand = brandService.updateBrand(createdBrand.getId(), updatedRequest);
 
