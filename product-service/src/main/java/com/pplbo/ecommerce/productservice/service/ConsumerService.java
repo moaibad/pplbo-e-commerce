@@ -4,13 +4,12 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.pplbo.ecommerce.productservice.event.OrderCreatedEvent;
-
 import com.pplbo.ecommerce.productservice.dto.dtoorder.OrderLineItemResponse;
 import com.pplbo.ecommerce.productservice.service.InventoryService;
-
-import jakarta.persistence.criteria.CriteriaBuilder.In;
+import com.pplbo.ecommerce.productservice.service.KafkaProducerService;
+import com.pplbo.ecommerce.productservice.dto.dtoorder.OrderResponse;
+import com.pplbo.ecommerce.productservice.model.Inventory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,28 +17,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-
 public class ConsumerService {
     private final InventoryService inventoryService;
+    private final KafkaProducerService kafkaProducerService;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    // @KafkaListener(topics = "coba", groupId = "group_id")
-    // public void consume(String message) {
-    //     try {
-    //         OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
-    //         handleOrderCreatedEvent(event);
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // private void handleOrderCreatedEvent(OrderCreatedEvent event) {
-    //     // Process the event
-    //     System.out.println("Handling user created event for user: " + event.getUser().getName());
-    // }
-
-    @KafkaListener(topics = "orderEvent", groupId = "group_id")
+    @KafkaListener(topics = "OrderCreateEvent", groupId = "group_id")
     public void consumeOrderEvent(String message) {
         try {
             OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
@@ -50,29 +34,41 @@ public class ConsumerService {
     }
 
     private void handleOrderCreatedEventOrder(OrderCreatedEvent event) {
-        // Process the event
-        // System.out.println("Handling user created event for user: " + event.getOrder());
         boolean instock = true;
-
-        // List<OrderLineItemResponse> orderLineItems = event.getOrder().orderLineItems();
-        // System.out.println("Handling order line item: " + orderLineItems);
 
         List<OrderLineItemResponse> orderLineItems = event.getOrder().orderLineItems();
         String orderStatus = event.getOrder().orderStatus();
+        OrderResponse updatedOrder;
 
+        //Default order status is Success
+        updatedOrder = event.getOrder().withOrderStatus("Success");
+
+        // Check if order is in processing state
         if (orderStatus.equals("Processing")) {
             for (OrderLineItemResponse orderLineItem : orderLineItems) {
-                if(inventoryService.checkStok(orderLineItem.productId(), orderLineItem.quantity()) == false){
+                if (!inventoryService.checkStok(orderLineItem.productId(), orderLineItem.quantity())) {
                     instock = false;
                     break;
                 }
             }
+            //Cek stok, jika stok cukup maka order berhasil dan stok berkurang
+            if (instock) {
+                for (OrderLineItemResponse orderLineItem : orderLineItems) {
+                    inventoryService.decreaseInventory(orderLineItem.productId(), orderLineItem.quantity());
+                }
+                updatedOrder = event.getOrder().withOrderStatus("Success");
+            } else {
+                updatedOrder = event.getOrder().withOrderStatus("Failed");
+            }
+        }else if (orderStatus.equals("Failed")) { //Jika order gagal, maka stok dikembalikan
+            for (OrderLineItemResponse orderLineItem : orderLineItems) {
+                Inventory existInventory = inventoryService.getInventoryByProductId(orderLineItem.productId());
+                inventoryService.recoverInventory(existInventory, orderLineItem.quantity());
+            }
+            updatedOrder = event.getOrder().withOrderStatus("Failed");
         }
 
-        if(instock){
-            for (OrderLineItemResponse orderLineItem : orderLineItems) {
-                inventoryService.decreaseInventory(orderLineItem.productId(), orderLineItem.quantity());
-            }
-        }
+        //Publish event 
+        kafkaProducerService.sendUserCreatedEvent(new OrderCreatedEvent(updatedOrder));
     }
 }
