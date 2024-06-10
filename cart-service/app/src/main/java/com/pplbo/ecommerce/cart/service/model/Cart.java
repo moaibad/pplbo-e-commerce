@@ -2,6 +2,9 @@ package com.pplbo.ecommerce.cart.service.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,10 +34,11 @@ public class Cart {
     private Long id;
 
     private String userID;
-    // Define the many-to-many relationship with products
+
     @ManyToMany
     @JoinTable(name = "cart_product", joinColumns = @JoinColumn(name = "cart_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @JsonIgnoreProperties("carts")
     private List<Product> products = new ArrayList<>();
 
-    private Integer totalPrice;
+    private Long totalPrice;
 }

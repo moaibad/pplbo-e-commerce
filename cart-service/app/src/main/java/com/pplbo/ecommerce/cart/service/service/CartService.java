@@ -3,6 +3,8 @@ package com.pplbo.ecommerce.cart.service.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pplbo.ecommerce.cart.service.dto.CartProductRequest;
+import com.pplbo.ecommerce.cart.service.dto.CartProductResponse;
 import com.pplbo.ecommerce.cart.service.dto.CartRequest;
 import com.pplbo.ecommerce.cart.service.model.Cart;
 import com.pplbo.ecommerce.cart.service.model.Product;
@@ -53,6 +55,20 @@ public class CartService {
         Cart cart = result.get();
         cart.setProducts(cartRequest.products());
         cart.setTotalPrice(cartRequest.totalPrice());
+        return cartRepository.save(cart);
+    }
+
+    public Cart addProductToCart(Long id, CartProductRequest cartProductRequest) {
+        Optional<Cart> result = cartRepository.findById(id);
+        Cart cart = result.get();
+        List<Product> products = cart.getProducts();
+        System.out.println(products.get(products.size() - 1).getName());
+        products.add(cartProductRequest.product());
+        // System.out.println(products.get(products.size() - 1).getName());
+        Long totalPrice = cart.getTotalPrice()
+                + (cartProductRequest.product().getPrice() * cartProductRequest.totalPrice());
+        cart.setTotalPrice(totalPrice);
+        // Save the cart
         return cartRepository.save(cart);
     }
 
