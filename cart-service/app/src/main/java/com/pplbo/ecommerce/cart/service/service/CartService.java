@@ -73,7 +73,18 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    public void deleteCartById(Long id) {
+    public Cart deleteCartById(Long id) {
         Optional<Cart> result = cartRepository.findById(id);
+        return result.get();
+    }
+
+    public void removeProductFromCart(Long cartId, Long productId) {
+        Optional<Cart> optionalCart = cartRepository.findById(cartId);
+        if (optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            cart.getProducts().removeIf(product -> product.getId().equals(productId));
+            cartRepository.save(cart);
+        } else {
+        }
     }
 }
