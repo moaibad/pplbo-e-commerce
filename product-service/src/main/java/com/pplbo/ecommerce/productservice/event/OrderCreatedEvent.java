@@ -44,4 +44,5 @@ public class OrderCreatedEvent {
     public void setOrder(OrderResponse order) {
         this.order = order;
     }
+
 }

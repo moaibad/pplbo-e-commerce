@@ -12,4 +12,17 @@ public record OrderResponse(
     ShippingResponse shipping,
     CustomerResponse customer,
     Long paymentId
-) {}
+) {
+    public OrderResponse withOrderStatus(String newStatus) {
+        return new OrderResponse(
+            this.orderId,
+            this.orderDate,
+            newStatus,
+            this.totalPrice,
+            this.orderLineItems,
+            this.shipping,
+            this.customer,
+            this.paymentId
+        );
+    }
+}

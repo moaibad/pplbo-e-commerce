@@ -37,6 +37,10 @@ public class InventoryService {
         return inventoryRepository.findByProductName(productName);
     }
 
+    public Inventory getInventoryByProductId(Integer productId) {
+        return inventoryRepository.findByProductId(productId);
+    }
+
     //decrease inventory
     public Inventory decreaseInventory(Integer productId, Integer quantity) {
         Inventory inventory = inventoryRepository.findByProductId(productId);
