@@ -12,6 +12,7 @@ import com.pplbo.ecommerce.cart.service.model.ProductToBuy;
 import com.pplbo.ecommerce.cart.service.repository.CartRepository;
 import com.pplbo.ecommerce.cart.service.repository.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,7 +34,9 @@ public class CartService {
         return cartRepository.findById(id);
     }
 
-    public Cart createCart(Cart cart) {
+    public Cart createCart(CartRequest cartRequest) {
+        Cart cart = Cart.builder().userID(cartRequest.userID()).totalPrice(Long.valueOf(0))
+                .productsToBuy(new ArrayList<>()).build();
         return cartRepository.save(cart);
     }
 

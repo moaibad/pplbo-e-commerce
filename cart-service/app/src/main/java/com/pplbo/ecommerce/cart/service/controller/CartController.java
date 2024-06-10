@@ -57,7 +57,7 @@ public class CartController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cart createCart(@RequestBody Cart cart) {
+    public Cart createCart(@RequestBody CartRequest cart) {
         return cartService.createCart(cart);
     }
 
