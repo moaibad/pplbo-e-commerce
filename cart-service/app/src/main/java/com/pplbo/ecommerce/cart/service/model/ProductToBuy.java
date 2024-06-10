@@ -30,13 +30,11 @@ public class ProductToBuy {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnoreProperties("productsToBuy")
     private Cart cart;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
+    private Long productId;
     private Integer quantityToBuy;
-
+    private Long totalProductPrice;
     // Getters and setters
 }
