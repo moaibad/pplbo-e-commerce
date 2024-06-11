@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class B1G1Promotion {
+public class ShippingPromotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,11 +14,8 @@ public class B1G1Promotion {
     @NotNull(message = "Promotion is mandatory")
     private Promotion promotion;
 
-    @NotNull(message = "Product ID is mandatory")
-    private Long productId;
-
-    @NotNull(message = "Free Product ID is mandatory")
-    private Long freeProductId;
+    @NotNull(message = "Minimum order price is mandatory")
+    private double minimumOrderPrice;
 
     // Getters and Setters
     public Long getId() {
@@ -37,19 +34,11 @@ public class B1G1Promotion {
         this.promotion = promotion;
     }
 
-    public Long getProductId() {
-        return productId;
+    public double getMinimumOrderPrice() {
+        return minimumOrderPrice;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public Long getFreeProductId() {
-        return freeProductId;
-    }
-
-    public void setFreeProductId(Long freeProductId) {
-        this.freeProductId = freeProductId;
+    public void setMinimumOrderPrice(double minimumOrderPrice) {
+        this.minimumOrderPrice = minimumOrderPrice;
     }
 }
