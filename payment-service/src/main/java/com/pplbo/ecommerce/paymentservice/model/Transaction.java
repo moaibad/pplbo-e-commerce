@@ -1,8 +1,10 @@
 package com.pplbo.ecommerce.paymentservice.model;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
 import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +23,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class Transaction {
     @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
+
     private Long paymentId;
     private Long orderId;
     private Date transactionDate;
