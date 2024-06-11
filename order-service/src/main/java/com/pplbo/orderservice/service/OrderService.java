@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class OrderService {
 
-    private static final String PRODUCT_REQUEST_TOPIC = "productRequest";
+    private static final String PRODUCT_REQUEST_TOPIC = "productRequestEvent";
     private static final String PAYMENT_REQUEST_TOPIC = "paymentRequestEvent";
 
     @Autowired
@@ -79,7 +79,7 @@ public class OrderService {
 
     // @KafkaListener(topics = "orderReply", groupId = "group_id")
     public void handleReply(OrderCreateEvent event) {
-        if(event.getOrder().orderStatus().equals("Success")){
+        if(event.getOrder().orderStatus().equals("PESANAN_DIBUAT")){
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String message = objectMapper.writeValueAsString(event);

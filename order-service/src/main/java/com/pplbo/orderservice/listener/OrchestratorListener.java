@@ -17,7 +17,7 @@ public class OrchestratorListener {
     @Autowired
     private ObjectMapper objectMapper; // Define or Autowire the ObjectMapper
 
-    @KafkaListener(topics = "orderReply", groupId = "group_id")
+    @KafkaListener(topics = "orderReplyEvent", groupId = "group_id")
     public void handleReply(String message) {
         // Tangani balasan dari service lain
         try {
