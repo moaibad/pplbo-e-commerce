@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.kafka.core.KafkaTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pplbo.ecommerce.paymentservice.event.ValidatePayment;
+import org.springframework.kafka.annotation.KafkaListener;
+import com.pplbo.ecommerce.paymentservice.event.OrderPaymentEvent;
+import java.util.Date;
 
 @Service
 public class TransactionService {
@@ -43,6 +46,65 @@ public class TransactionService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendOrderPaymentEvent(OrderPaymentEvent orderPaymentEvent) {
+        try {
+            String message = objectMapper.writeValueAsString(orderPaymentEvent);
+            kafkaTemplate.send(TOPIC, message);
+            System.out.println("Produced message: " + message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @KafkaListener(topics = "paymentRequestEvent", groupId = "group_id")
+    public void consumePaymentRequestEvent(String message) {
+        try {
+            OrderPaymentEvent orderPaymentEvent = objectMapper.readValue(message, OrderPaymentEvent.class);
+            handlePaymentRequestEvent(orderPaymentEvent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handlePaymentRequestEvent(OrderPaymentEvent orderPaymentEvent) {
+        // Handle the payment request event
+        Long paymentId = orderPaymentEvent.getOrder().paymentId();
+
+        // Fetch the UserPayment
+        UserPayment userPayment = userPaymentRepository.findById(paymentId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Invalid paymentId: " + paymentId));
+
+        // Check if the balance is sufficient
+        double balance = Double.parseDouble(userPayment.getBalance());
+        String transactionStatus;
+        if (balance > orderPaymentEvent.getOrder().totalPrice()) {
+            transactionStatus = "PAYMENT_SUCCESS";
+            balance -= orderPaymentEvent.getOrder().totalPrice();
+        } else {
+            transactionStatus = "PAYMENT_FAILED";
+        }
+
+        // Update the UserPayment balance
+        userPayment.setBalance(String.valueOf(balance));
+        userPaymentRepository.save(userPayment);
+
+        // Create the transaction
+        Transaction transaction = Transaction.builder()
+                .paymentId(paymentId)
+                .orderId(orderPaymentEvent.getOrder().orderId())
+                .transactionDate(new Date())
+                .transactionAmount(orderPaymentEvent.getOrder().totalPrice())
+                .transactionStatus(transactionStatus)
+                .build();
+
+        transactionRepository.save(transaction);
+
+        // Send the payment event
+        sendOrderPaymentEvent(orderPaymentEvent);
     }
 
     public List<TransactionResponse> getAllTransactions() {
