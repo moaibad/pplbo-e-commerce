@@ -12,6 +12,9 @@ import java.util.stream.Collectors;
 import com.pplbo.ecommerce.paymentservice.model.UserPayment;
 import com.pplbo.ecommerce.paymentservice.repository.UserPaymentRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.kafka.core.KafkaTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pplbo.ecommerce.paymentservice.event.ValidatePayment;
 
 @Service
 public class TransactionService {
@@ -21,6 +24,26 @@ public class TransactionService {
 
     @Autowired
     private UserPaymentRepository userPaymentRepository;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    private static final String TOPIC = "payment";
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public void sendMessage(String message) {
+        kafkaTemplate.send(TOPIC, message);
+    }
+
+    public void sendPaymentEvent(ValidatePayment validatePayment) {
+        try {
+            String message = objectMapper.writeValueAsString(validatePayment);
+            kafkaTemplate.send(TOPIC, message);
+            System.out.println("Produced message: " + message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public List<TransactionResponse> getAllTransactions() {
         return transactionRepository.findAll().stream()
@@ -58,6 +81,9 @@ public class TransactionService {
         Transaction transaction = toTransaction(transactionRequest);
         transaction.setTransactionStatus(transactionStatus);
         transaction = transactionRepository.save(transaction);
+
+        // Send the payment event
+        sendPaymentEvent(new ValidatePayment(transaction));
 
         return toTransactionResponse(transaction);
     }
