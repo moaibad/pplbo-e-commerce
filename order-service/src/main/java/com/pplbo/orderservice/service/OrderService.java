@@ -31,6 +31,7 @@ public class OrderService {
 
     private static final String PRODUCT_REQUEST_TOPIC = "productRequestEvent";
     private static final String PAYMENT_REQUEST_TOPIC = "paymentRequestEvent";
+    private static final String COMPENSATE_PRODUCT = "productCompensateEvent";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -85,6 +86,23 @@ public class OrderService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String message = objectMapper.writeValueAsString(event);
                 kafkaTemplate.send(PAYMENT_REQUEST_TOPIC, message);      
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (event.getOrder().orderStatus().equals("PESANAN_SELESAI")){
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String message = objectMapper.writeValueAsString(event);
+                System.out.println("CAPEK : " + message); 
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else if (event.getOrder().orderStatus().equals("PESANAN_DIBATALKAN")){
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String message = objectMapper.writeValueAsString(event);
+                System.out.println("HAYO : " + message); 
+                kafkaTemplate.send(COMPENSATE_PRODUCT, message);    
             } catch (Exception e) {
                 e.printStackTrace();
             }
