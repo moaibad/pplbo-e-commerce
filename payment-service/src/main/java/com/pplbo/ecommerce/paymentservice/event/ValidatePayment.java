@@ -1,19 +1,30 @@
 package com.pplbo.ecommerce.paymentservice.event;
 
-import com.pplbo.ecommerce.paymentservice.model.Payment;
+import com.pplbo.ecommerce.paymentservice.model.UserPayment;
+import com.pplbo.ecommerce.paymentservice.model.Transaction;
 
 public class ValidatePayment {
-    private Payment payment;
+    private UserPayment userPayment;
+    private Transaction transaction;
 
-    public ValidatePayment(Payment payment) {
-        this.payment = payment;
+    public ValidatePayment(UserPayment userPayment, Transaction transaction) {
+        this.userPayment = userPayment;
+        this.transaction = transaction;
     }
 
-    public Payment getPayment() {
-        return payment;
+    public UserPayment getUserPayment() {
+        return userPayment;
     }
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
+    public void setUserPayment(UserPayment userPayment) {
+        this.userPayment = userPayment;
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 }
