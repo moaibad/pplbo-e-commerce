@@ -1,15 +1,15 @@
-package com.pplbo.ecommerce.productservice.event;
+package com.pplbo.ecommerce.productservice.sagas.createorder.event;
 
 import com.pplbo.ecommerce.productservice.dto.dtoorder.OrderResponse;
 import com.pplbo.ecommerce.productservice.model.order.Order;
 
-public class OrderCreatedEvent {
+public class OrderEvent {
     private OrderResponse order;
 
-    public OrderCreatedEvent() {
+    public OrderEvent() {
     }
     
-    public OrderCreatedEvent(OrderResponse order) {
+    public OrderEvent(OrderResponse order) {
         this.order = order;
     }   
 

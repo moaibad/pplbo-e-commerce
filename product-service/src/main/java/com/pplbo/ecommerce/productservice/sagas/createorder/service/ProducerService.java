@@ -1,4 +1,4 @@
-package com.pplbo.ecommerce.productservice.service;
+package com.pplbo.ecommerce.productservice.sagas.createorder.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.pplbo.ecommerce.productservice.event.OrderCreatedEvent;
+import com.pplbo.ecommerce.productservice.sagas.createorder.event.OrderEvent;
 
 @Service
-public class KafkaProducerService {
+public class ProducerService {
 
-    private static final String TOPIC = "OrderProductEvent";
+    private static final String TOPIC = "orderReplyEvent";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -20,7 +20,7 @@ public class KafkaProducerService {
         kafkaTemplate.send(TOPIC, message);
     }
 
-    public void sendUserCreatedEvent(OrderCreatedEvent event) {
+    public void sendOrderReplyEvent(OrderEvent event) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String message = objectMapper.writeValueAsString(event);
