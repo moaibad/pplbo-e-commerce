@@ -21,7 +21,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/products/review")
+@RequestMapping("api/product/review")
 @RequiredArgsConstructor
 
 public class ProductReviewController {
@@ -34,7 +34,7 @@ public class ProductReviewController {
         return productReviewService.createProductReview(productReviewRequest);
     }
 
-    @GetMapping("/allreview")
+    @GetMapping("/all")
     public List<ProductReviewResponse> getAllProductReviews() {
         return productReviewService.getAllProductReviews();
     }
@@ -44,9 +44,9 @@ public class ProductReviewController {
         return productReviewService.getProductReviewById(id);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeProductReview(@RequestBody ProductReviewRequest productReviewRequest) {
-        productReviewService.removeProductReview(productReviewRequest.id());
+    public void removeProductReview(@PathVariable("id") Integer id) {
+        productReviewService.removeProductReview(id);
     }
 }

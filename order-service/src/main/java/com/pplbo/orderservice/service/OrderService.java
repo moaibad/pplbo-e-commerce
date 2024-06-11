@@ -22,6 +22,7 @@ import com.pplbo.orderservice.repository.OrderRepository;
 import com.pplbo.orderservice.event.OrderCreateEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.kafka.annotation.KafkaListener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +36,9 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper; // Define or Autowire the ObjectMapper
 
     // @Autowired
     // private PaymentClient paymentClient;
@@ -70,6 +74,12 @@ public class OrderService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @KafkaListener(topics = "orderReply", groupId = "group_id")
+    public void handleReply(String message) {
+        // OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
+        System.out.println("TEST HALO ADA GA : " + message);        
     }
 
     public void deleteById(Long id) {
