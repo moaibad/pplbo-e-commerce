@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ConsumerService {
+public class ConsumerServicee {
     private final InventoryService inventoryService;
     private final KafkaProducerService kafkaProducerService;
 
