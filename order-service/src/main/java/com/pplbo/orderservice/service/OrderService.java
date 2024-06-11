@@ -29,7 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class OrderService {
 
-    private static final String TOPIC = "test-topic";
+    private static final String PRODUCT_REQUEST_TOPIC = "productRequest";
+    private static final String PAYMENT_REQUEST_TOPIC = "paymentRequestEvent";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -39,6 +40,7 @@ public class OrderService {
 
     @Autowired
     private ObjectMapper objectMapper; // Define or Autowire the ObjectMapper
+    
 
     // @Autowired
     // private PaymentClient paymentClient;
@@ -69,16 +71,24 @@ public class OrderService {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String message = objectMapper.writeValueAsString(event);
-            kafkaTemplate.send(TOPIC, message);
+            kafkaTemplate.send(PRODUCT_REQUEST_TOPIC, message);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @KafkaListener(topics = "orderReply", groupId = "group_id")
-    public void handleReply(String message) {
-        // OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
-        System.out.println("TEST HALO ADA GA : " + message);        
+    // @KafkaListener(topics = "orderReply", groupId = "group_id")
+    public void handleReply(OrderCreateEvent event) {
+        if(event.getOrder().orderStatus().equals("Success")){
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String message = objectMapper.writeValueAsString(event);
+                kafkaTemplate.send(PAYMENT_REQUEST_TOPIC, message);      
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("TEST HALO ADA GA : " + event.getOrder());        
     }
 
     public void deleteById(Long id) {
