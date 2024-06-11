@@ -23,7 +23,7 @@ public class ConsumerService {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @KafkaListener(topics = "OrderCreateEvent", groupId = "group_id")
+    @KafkaListener(topics = "test-topic", groupId = "group_id")
     public void consumeOrderEvent(String message) {
         try {
             OrderCreatedEvent event = objectMapper.readValue(message, OrderCreatedEvent.class);
